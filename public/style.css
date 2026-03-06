@@ -1,0 +1,326 @@
+:root {
+    --bg-color: #ffffff;
+    --card-bg: #ffffff;
+    --text-main: #000000;
+    --text-muted: #555555;
+    --border-color: #000000;
+    --accent: #000000;
+    --accent-text: #ffffff;
+    --hover-bg: #f0f0f0;
+}
+
+[data-theme="dark"] {
+    --bg-color: #0a0a0a;
+    --card-bg: #111111;
+    --text-main: #ffffff;
+    --text-muted: #aaaaaa;
+    --border-color: #ffffff;
+    --accent: #ffffff;
+    --accent-text: #000000;
+    --hover-bg: #1a1a1a;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    transition: background-color 0.2s, color 0.2s;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.hidden { display: none !important; }
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 5%;
+    border-bottom: 2px solid var(--border-color);
+    background: var(--bg-color);
+}
+
+.logo {
+    font-weight: 900;
+    font-size: 1.5rem;
+    letter-spacing: -1px;
+    text-decoration: none;
+    color: var(--text-main);
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 1.5rem;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-main);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+.nav-links a:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+.btn-icon {
+    background: none;
+    border: none;
+    color: var(--text-main);
+    cursor: pointer;
+}
+
+/* Main Content */
+main {
+    flex: 1;
+    padding: 4rem 5%;
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.hero {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    font-weight: 900;
+    letter-spacing: -1.5px;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+}
+
+/* Tools Grid */
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2rem;
+}
+
+.tool-card {
+    background: var(--card-bg);
+    border: 2px solid var(--border-color);
+    padding: 2.5rem 1.5rem;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.tool-card:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: 6px 6px 0 var(--border-color);
+}
+
+.tool-icon {
+    width: 36px;
+    height: 36px;
+    margin-bottom: 1.5rem;
+}
+
+.tool-card h3 { font-size: 1.25rem; font-weight: 800; margin-bottom: 0.5rem; }
+.tool-card p { font-size: 0.9rem; color: var(--text-muted); font-weight: 600; }
+
+/* Tool Interface */
+#tool-interface {
+    border: 2px solid var(--border-color);
+    padding: 2.5rem;
+    background: var(--card-bg);
+}
+
+.tool-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 1rem;
+}
+
+.btn-back {
+    background: none; border: none; color: var(--text-main); cursor: pointer;
+}
+
+.tool-heading { font-size: 1.5rem; font-weight: 800; text-transform: uppercase; }
+
+label {
+    display: block; font-weight: 800; text-transform: uppercase; margin-bottom: 0.5rem; font-size: 0.85rem;
+}
+
+input[type="text"], .monochrome-select {
+    width: 100%; padding: 1rem; background: var(--bg-color);
+    border: 2px solid var(--border-color); color: var(--text-main);
+    font-size: 1rem; font-weight: 600; margin-bottom: 1.5rem; outline: none;
+    appearance: none;
+}
+
+input[type="text"]:focus, .monochrome-select:focus { background: var(--hover-bg); }
+
+.upload-area {
+    border: 2px dashed var(--border-color); padding: 4rem 2rem;
+    text-align: center; cursor: pointer; margin-bottom: 1.5rem; background: var(--bg-color);
+}
+
+.upload-area:hover { background: var(--hover-bg); }
+.upload-area i { width: 48px; height: 48px; margin-bottom: 1rem; }
+
+.btn-primary {
+    width: 100%; padding: 1rem; background: var(--accent); color: var(--accent-text);
+    border: 2px solid var(--border-color); font-size: 1rem; font-weight: 800;
+    text-transform: uppercase; cursor: pointer; transition: all 0.2s;
+}
+
+.btn-primary:hover:not(:disabled) { background: var(--bg-color); color: var(--text-main); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.progress-container { width: 100%; height: 8px; border: 2px solid var(--border-color); margin: 1.5rem 0; }
+.progress-bar { height: 100%; background: var(--text-main); width: 0%; transition: width 0.1s linear; }
+
+.result-box { display: flex; gap: 0.5rem; }
+.btn-copy {
+    background: var(--text-main); color: var(--bg-color); border: 2px solid var(--border-color);
+    padding: 0 1rem; cursor: pointer;
+}
+.btn-copy:hover { background: var(--bg-color); color: var(--text-main); }
+
+/* --- SECTION ABOUT BARU --- */
+.about-section {
+    margin-top: 5rem;
+}
+
+.about-card {
+    border: 2px solid var(--border-color);
+    background: var(--card-bg);
+}
+
+/* Banner 16:9 */
+.banner-container {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-bottom: 2px solid var(--border-color);
+    background-color: var(--hover-bg);
+    overflow: hidden;
+}
+
+.banner-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Foto Profil WhatsApp Style */
+.profile-container {
+    display: flex;
+    justify-content: center;
+    margin-top: -60px; /* Menarik foto agar setengahnya menabrak banner */
+    position: relative;
+    z-index: 10;
+}
+
+.profile-img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 4px solid var(--card-bg); /* Garis luar menyesuaikan warna kartu belakangnya */
+    object-fit: cover;
+    background-color: var(--bg-color);
+}
+
+/* Deskripsi Info */
+.about-info {
+    text-align: center;
+    padding: 2rem;
+}
+
+.about-info h2 {
+    font-size: 1.8rem;
+    font-weight: 900;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+}
+
+.about-info p {
+    font-size: 1rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    line-height: 1.6;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+/* Tech Stack Ditenagai Oleh */
+.tech-section {
+    padding: 2rem;
+    border-top: 2px solid var(--border-color);
+    text-align: center;
+    background: var(--bg-color);
+}
+
+.tech-section h3 {
+    font-size: 1.2rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+}
+
+.tech-grid {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.tech-box {
+    border: 2px solid var(--border-color);
+    padding: 1.5rem 1rem;
+    width: 110px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    background: var(--card-bg);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.tech-box:hover {
+    transform: translateY(-4px);
+    box-shadow: 4px 4px 0 var(--border-color);
+}
+
+.tech-box img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    filter: grayscale(100%); /* Membuat logo tech jadi hitam putih agar senada */
+    transition: filter 0.2s;
+}
+
+.tech-box:hover img {
+    filter: grayscale(0%); /* Saat disentuh mouse, warnanya muncul */
+}
+
+.tech-box span {
+    font-size: 0.85rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+/* Footer */
+footer {
+    text-align: center; padding: 2rem; border-top: 2px solid var(--border-color); font-weight: 600; text-transform: uppercase; font-size: 0.85rem; margin-top: 2rem;
+}

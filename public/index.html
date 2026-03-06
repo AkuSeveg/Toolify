@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toolify - Modern Minimalist Tools</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="#" class="logo">TOOLIFY.</a>
+        <div class="nav-right">
+            <ul class="nav-links">
+                <li><a href="#" class="active">Home</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+            <button id="theme-toggle" class="btn-icon"><i data-feather="moon"></i></button>
+        </div>
+    </nav>
+
+    <main>
+        <header class="hero">
+            <h1>All the tools you need.</h1>
+            <p>Fast, minimalist, and secure.</p>
+        </header>
+
+        <section id="tools" class="tools-grid">
+            <div class="tool-card" onclick="openTool('downloader')">
+                <i data-feather="download-cloud" class="tool-icon"></i>
+                <h3>Video Downloader</h3>
+                <p>Download MP4/MP3 from any link.</p>
+            </div>
+
+            <div class="tool-card" onclick="openTool('converter')">
+                <i data-feather="refresh-cw" class="tool-icon"></i>
+                <h3>File Converter</h3>
+                <p>Convert MP4, PNG, JPG, PDF.</p>
+            </div>
+
+            <div class="tool-card" onclick="openTool('imageLink')">
+                <i data-feather="image" class="tool-icon"></i>
+                <h3>Image to Link</h3>
+                <p>Upload image, get a public link.</p>
+            </div>
+
+            <div class="tool-card" onclick="openTool('videoLink')">
+                <i data-feather="video" class="tool-icon"></i>
+                <h3>Video to Link</h3>
+                <p>Upload video, get a public link.</p>
+            </div>
+        </section>
+
+        <section id="tool-interface" class="hidden">
+            <div class="tool-header">
+                <button class="btn-back" onclick="closeTool()"><i data-feather="arrow-left"></i></button>
+                <h2 id="tool-title" class="tool-heading">Tool Name</h2>
+            </div>
+            
+            <div class="input-area hidden" id="link-input-area">
+                <label>Masukkan Link Video</label>
+                <input type="text" id="url-input" placeholder="Paste link di sini (YouTube, TikTok, dll)...">
+            </div>
+
+            <div class="upload-area" id="drop-zone">
+                <i data-feather="upload"></i>
+                <h4 id="drop-text">Drag & Drop file ke sini atau klik</h4>
+                <p>Maksimal 2GB.</p>
+                <input type="file" id="file-input" hidden>
+            </div>
+
+            <div class="format-selection hidden" id="format-selection-area">
+                <label for="target-format">Ubah format menjadi:</label>
+                <select id="target-format" class="monochrome-select">
+                    <option value="mp3">MP3 Audio</option>
+                    <option value="jpg">JPG Image</option>
+                    <option value="png">PNG Image</option>
+                    <option value="pdf">PDF Document</option>
+                    <option value="mp4">MP4 Video</option>
+                </select>
+            </div>
+
+            <button class="btn-primary" id="action-btn">Process</button>
+
+            <div class="progress-container hidden" id="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+
+            <div class="result-area hidden" id="result-area">
+                <label>Hasil:</label>
+                <div class="result-box">
+                    <input type="text" id="result-link" readonly>
+                    <button class="btn-copy" id="copy-btn"><i data-feather="copy"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="about-section">
+            <div class="about-card">
+                <div class="banner-container">
+                    <img src="/assets/banner.jpg" alt="Toolify Banner" class="banner-img"
+                </div>
+                
+                <div class="profile-container">
+                    <img src="/assets/profile.jpg" alt="Profil Yoanz" class="profile-img"
+                </div>
+
+                <div class="about-info">
+                    <h2>Tentang Toolify</h2>
+                    <p>
+                        Toolify adalah platform alat digital modern dengan desain minimalis yang dirancang untuk mempercepat alur kerjamu. 
+                        Mulai dari mengunduh video hingga mengonversi format file, semuanya diproses dengan cepat, aman, 
+                        dan responsif.
+                    </p>
+                </div>
+
+                <div class="tech-section">
+                    <h3>Ditenagai Oleh</h3>
+                    <div class="tech-grid">
+                        <div class="tech-box">
+                            <img src="/assets/html.png" alt="HTML" 
+                            <span>HTML</span>
+                        </div>
+                        <div class="tech-box">
+                            <img src="/assets/css.png" alt="CSS" 
+                            <span>CSS</span>
+                        </div>
+                        <div class="tech-box">
+                            <img src="/assets/js.png" alt="JavaScript" 
+                            <span>JavaScript</span>
+                        </div>
+                        <div class="tech-box">
+                            <img src="/assets/node.png" alt="Node.js" 
+                            <span>Node.js</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Created by <strong>Yoanz</strong></p>
+    </footer>
+
+    <script src="/script.js"></script>
+    <script src="/tools/uploaderManager.js"></script>
+    <script src="/tools/convert.js"></script>
+    <script src="/tools/downloader.js"></script>
+    <script>feather.replace();</script>
+</body>
+</html>
