@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // 1. Menangkap semua elemen dari HTML
     const btnProcess = document.getElementById('action-btn');
     const urlInput = document.getElementById('url-input');
     const progressContainer = document.getElementById('progress-container');
@@ -7,16 +8,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultLink = document.getElementById('result-link');
     const copyBtn = document.getElementById('copy-btn');
 
+    // Mencegah error jika tombol tidak ditemukan di halaman
     if (!btnProcess) return;
 
+    // 2. Event ketika tombol Process diklik
     btnProcess.addEventListener('click', async () => {
         const urlStr = urlInput.value.trim();
         
+        // Peringatan jika link kosong
         if (!urlStr) {
-            alert('Harap masukkan link video!');
+            alert('Harap masukkan link video YouTube!');
             return;
         }
 
+        // Ubah tampilan menjadi mode Loading
         btnProcess.disabled = true;
         btnProcess.textContent = 'EXTRACTING...';
         progressContainer.classList.remove('hidden');
@@ -24,78 +29,84 @@ document.addEventListener('DOMContentLoaded', () => {
         progressBar.style.width = '30%';
 
         try {
-            let apiUrl = '';
-            let finalDownloadLink = null;
+            // 🔥 MESIN PEMOTONG KTP YOUTUBE 🔥
+            // Mengambil 11 digit ID video dari link yang panjang
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+            const match = urlStr.match(regExp);
+            const videoId = (match && match[2].length === 11) ? match[2] : null;
 
-            // 🔥 MESIN DETEKSI PLATFORM OTOMATIS 🔥
-            
-            // 1. Jika Link YOUTUBE
-            if (urlStr.includes('youtu.be') || urlStr.includes('youtube.com')) {
-                apiUrl = `https://widipe.com/download/ytdl?url=${encodeURIComponent(urlStr)}`;
-                const response = await fetch(apiUrl);
-                const data = await response.json();
-                if (data.result && data.result.mp4) finalDownloadLink = data.result.mp4;
-            } 
-            // 2. Jika Link TIKTOK
-            else if (urlStr.includes('tiktok.com')) {
-                apiUrl = `https://api.tiklydown.eu.org/api/download?url=${encodeURIComponent(urlStr)}`;
-                const response = await fetch(apiUrl);
-                const data = await response.json();
-                if (data.video && data.video.noWatermark) finalDownloadLink = data.video.noWatermark;
-            } 
-            // 3. Jika Link INSTAGRAM
-            else if (urlStr.includes('instagram.com')) {
-                apiUrl = `https://widipe.com/download/igdl?url=${encodeURIComponent(urlStr)}`;
-                const response = await fetch(apiUrl);
-                const data = await response.json();
-                // Mengambil video pertama dari kumpulan slide/reels IG
-                if (data.result && data.result.length > 0) finalDownloadLink = data.result[0].url;
-                else if (data.result && data.result.url) finalDownloadLink = data.result.url;
-            } 
-            // 4. Jika Link FACEBOOK
-            else if (urlStr.includes('facebook.com') || urlStr.includes('fb.watch')) {
-                apiUrl = `https://widipe.com/download/fbdl?url=${encodeURIComponent(urlStr)}`;
-                const response = await fetch(apiUrl);
-                const data = await response.json();
-                if (data.result && data.result.Normal_video) finalDownloadLink = data.result.Normal_video;
-                else if (data.result && data.result.HD) finalDownloadLink = data.result.HD;
-            } 
-            // Jika tidak dikenali
-            else {
-                throw new Error('Link tidak didukung. Harap masukkan link YT, TikTok, IG, atau FB yang valid.');
+            if (!videoId) {
+                throw new Error("Link YouTube tidak valid. Harap masukkan link yang benar.");
             }
 
+            progressBar.style.width = '50%';
+
+            // 🔥 KUNCI RAPIDAPI MILIKMU (FULL & ASLI) 🔥
+            const RAPIDAPI_KEY = "72c9e6943emshb88e6069d09605fp1945b0jsn784f000ba98e";
+            const RAPIDAPI_HOST = "youtube-video-fast-downloader-24-7.p.rapidapi.com"; 
+
+            // Tembak server RapidAPI VIP dengan ID Video milikmu
+            const apiUrl = `https://${RAPIDAPI_HOST}/get-videos-info/${videoId}?response_mode=default`;
+
+            const response = await fetch(apiUrl, {
+                method: 'GET',
+                headers: {
+                    'x-rapidapi-key': RAPIDAPI_KEY,
+                    'x-rapidapi-host': RAPIDAPI_HOST
+                }
+            });
+
+            // Cek jika server RapidAPI menolak atau error
+            if (!response.ok) {
+                throw new Error(`Gagal terhubung ke API (Status: ${response.status})`);
+            }
+
+            const data = await response.json();
             progressBar.style.width = '80%';
 
-            // Tampilkan hasil jika sukses menangkap link
+            // 🤖 JURUS PENCARI LINK MP4 OTOMATIS 🤖
+            let finalDownloadLink = null;
+            
+            // Kita bongkar paksa isi JSON-nya dan cari link yang asalnya dari server YouTube
+            JSON.stringify(data, (key, value) => {
+                if (typeof value === 'string' && (value.includes('googlevideo.com/videoplayback') || value.includes('.mp4'))) {
+                    if (!finalDownloadLink) finalDownloadLink = value; // Ambil link pertama yang ketemu
+                }
+                return value;
+            });
+
+            progressBar.style.width = '100%';
+
+            // Tampilkan hasil akhirnya ke layar
             if (finalDownloadLink) {
                 setTimeout(() => {
-                    progressBar.style.width = '100%';
                     progressContainer.classList.add('hidden');
                     resultArea.classList.remove('hidden');
                     resultLink.value = finalDownloadLink;
                 }, 500);
             } else {
-                throw new Error('Server API sedang sibuk atau video ini diprivate oleh pembuat aslinya.');
+                console.log("Data mentah dari API:", data);
+                throw new Error('Video berhasil ditemukan di server, tapi link download MP4-nya diproteksi.');
             }
 
         } catch (error) {
+            // Jika terjadi error, kembalikan tampilan dan beri alert
             progressBar.style.width = '0%';
             progressContainer.classList.add('hidden');
             alert(`API Error: ${error.message}`);
         } finally {
-            // Kembalikan tombol seperti semula
+            // Normalkan kembali tombol Process
             btnProcess.disabled = false;
             btnProcess.textContent = 'PROCESS';
         }
     });
 
-    // Fitur Copy Link
+    // 3. Fitur Tombol Copy Link
     if (copyBtn) {
         copyBtn.addEventListener('click', () => {
             resultLink.select();
             document.execCommand('copy');
-            alert('Link berhasil disalin ke clipboard!');
+            alert('Link MP4 berhasil disalin ke clipboard! Buka tab browser baru lalu Paste linknya untuk mendownload.');
         });
     }
 });
