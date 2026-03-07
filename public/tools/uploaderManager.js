@@ -1,5 +1,5 @@
 const CLOUD_NAME = 'dsgww7mqb'; 
-const UPLOAD_PRESET = 'YoanProject_unsigned'; 
+const UPLOAD_PRESET = 'ml_default'; 
 
 function uploadFileRealtime(file) {
     if (!file) {
