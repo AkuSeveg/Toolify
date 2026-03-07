@@ -27,10 +27,29 @@
         </header>
 
         <section id="tools" class="tools-grid">
-            <div class="tool-card" onclick="openTool('downloader')">
-                <i data-feather="download-cloud" class="tool-icon"></i>
-                <h3>Video Downloader</h3>
-                <p>Download MP4/MP3 from any link.</p>
+            
+            <div class="tool-card" onclick="openTool('downloader'); document.getElementById('tool-title').innerText = 'YouTube DL';">
+                <i data-feather="youtube" class="tool-icon"></i>
+                <h3>YouTube DL</h3>
+                <p>Download video & MP3 dari YouTube.</p>
+            </div>
+
+            <div class="tool-card" onclick="openTool('downloader'); document.getElementById('tool-title').innerText = 'TikTok DL';">
+                <i data-feather="smartphone" class="tool-icon"></i>
+                <h3>TikTok DL</h3>
+                <p>Download video tanpa watermark.</p>
+            </div>
+
+            <div class="tool-card" onclick="openTool('downloader'); document.getElementById('tool-title').innerText = 'Instagram DL';">
+                <i data-feather="instagram" class="tool-icon"></i>
+                <h3>Instagram DL</h3>
+                <p>Download Reels & Postingan IG.</p>
+            </div>
+
+            <div class="tool-card" onclick="openTool('downloader'); document.getElementById('tool-title').innerText = 'Facebook DL';">
+                <i data-feather="facebook" class="tool-icon"></i>
+                <h3>Facebook DL</h3>
+                <p>Download video dari Facebook.</p>
             </div>
 
             <div class="tool-card" onclick="openTool('converter')">
@@ -60,7 +79,7 @@
             
             <div class="input-area hidden" id="link-input-area">
                 <label>Masukkan Link Video</label>
-                <input type="text" id="url-input" placeholder="Paste link di sini (YouTube, TikTok, dll)...">
+                <input type="text" id="url-input" placeholder="Paste link di sini...">
             </div>
 
             <div class="upload-area" id="drop-zone">
@@ -97,43 +116,25 @@
         </section>
 
         <section id="about" class="about-section">
-            
             <div class="vertical-card banner-card">
                 <img src="/assets/banner.jpg" alt="Toolify Banner" class="banner-img">
             </div>
-
             <div class="vertical-card profile-card">
                 <img src="/assets/profile.jpg" alt="Profil Yoanz" class="profile-img">
                 <div class="about-info">
                     <h2>Tentang Toolify</h2>
-                    <p>
-                        Toolify adalah platform alat digital modern dengan desain minimalis yang dirancang untuk mempercepat alur kerjamu. Cepat, aman, dan responsif.
-                    </p>
+                    <p>Toolify adalah platform alat digital modern dengan desain minimalis yang dirancang untuk mempercepat alur kerjamu. Cepat, aman, dan responsif.</p>
                 </div>
             </div>
-
             <div class="vertical-card tech-card">
                 <h3>Ditenagai Oleh</h3>
                 <div class="tech-vertical-list">
-                    <div class="tech-item">
-                        <img src="/assets/html.png" alt="HTML">
-                        <span>HTML 5</span>
-                    </div>
-                    <div class="tech-item">
-                        <img src="/assets/css.png" alt="CSS">
-                        <span>CSS 3</span>
-                    </div>
-                    <div class="tech-item">
-                        <img src="/assets/js.png" alt="JavaScript">
-                        <span>JavaScript</span>
-                    </div>
-                    <div class="tech-item">
-                        <img src="/assets/node.png" alt="Node.js">
-                        <span>Node.js Backend</span>
-                    </div>
+                    <div class="tech-item"><img src="/assets/html.png" alt="HTML"><span>HTML 5</span></div>
+                    <div class="tech-item"><img src="/assets/css.png" alt="CSS"><span>CSS 3</span></div>
+                    <div class="tech-item"><img src="/assets/js.png" alt="JavaScript"><span>JavaScript</span></div>
+                    <div class="tech-item"><img src="/assets/node.png" alt="Node.js"><span>Node.js Backend</span></div>
                 </div>
             </div>
-
         </section>
     </main>
 
@@ -147,4 +148,4 @@
     <script src="/tools/downloader.js"></script>
     <script>feather.replace();</script>
 </body>
-</html>
+                                                                                                  </html>
