@@ -2,7 +2,7 @@ import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 
 // 1. Inisialisasi koneksi Redis untuk Rate Limiting
-// Ganti bagian ini dengan tanda kutip, buang process.env-nya
+// URL dan Token menggunakan string langsung (tanda kutip) agar Vercel bisa membacanya
 const redis = new Redis({
   url: "https://fine-shepherd-64718.upstash.io",
   token: "AfzOAAIncDJhYWM2YWUwY2IxMmU0YTQyYjc0NGIwZTBkMzUxMGFhMHAyNjQ3MTg",
@@ -48,17 +48,19 @@ export default async function handler(req, res) {
         // --- FITUR VIDEO DOWNLOADER ---
         if (action === 'download' && videoUrl) {
             try {
-                // Menggunakan public API dari Cobalt untuk mengekstrak video
-                const apiResponse = await fetch("https://co.wuk.sh/api/json", {
+                // Menggunakan public API resmi dari Cobalt yang baru beserta Headers penyamaran
+                const apiResponse = await fetch("https://api.cobalt.tools/api/json", {
                     method: "POST",
                     headers: {
                         "Accept": "application/json",
-                        "Content-Type": "application/json"
+                        "Content-Type": "application/json",
+                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+                        "Origin": "https://cobalt.tools"
                     },
                     body: JSON.stringify({
                         url: videoUrl,
                         vQuality: "720",
-                        isAudioOnly: false // Ubah jadi true jika ke depannya ingin fitur download MP3 saja
+                        isAudioOnly: false 
                     })
                 });
 
