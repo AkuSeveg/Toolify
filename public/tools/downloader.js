@@ -24,44 +24,59 @@ document.addEventListener('DOMContentLoaded', () => {
         progressBar.style.width = '30%';
 
         try {
-            // 🔥 ALAMAT SUDAH DIPERBAIKI: Menghapus "/api" yang nyasar 🔥
-            const apiUrl = `https://danxyofficial-api.vercel.app/download/aiodl?url=${encodeURIComponent(urlStr)}`;
-            
-            const response = await fetch(apiUrl);
-            
-            // Cek jika server mengembalikan halaman HTML/Error bukan JSON
-            const contentType = response.headers.get("content-type");
-            if (contentType && contentType.indexOf("application/json") === -1) {
-                throw new Error("Server API tidak merespons dengan format JSON. (Mungkin sedang offline/maintenance)");
-            }
-
-            const data = await response.json();
-            progressBar.style.width = '70%';
-
+            let apiUrl = '';
             let finalDownloadLink = null;
 
-            // Deteksi format balasan
-            if (data.result && data.result.url) {
-                finalDownloadLink = data.result.url;
-            } else if (data.url) {
-                finalDownloadLink = data.url;
-            } else if (data.result && data.result.video) {
-                finalDownloadLink = data.result.video;
-            } else if (data.data && data.data.url) {
-                finalDownloadLink = data.data.url;
+            // 🔥 MESIN DETEKSI PLATFORM OTOMATIS 🔥
+            
+            // 1. Jika Link YOUTUBE
+            if (urlStr.includes('youtu.be') || urlStr.includes('youtube.com')) {
+                apiUrl = `https://widipe.com/download/ytdl?url=${encodeURIComponent(urlStr)}`;
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                if (data.result && data.result.mp4) finalDownloadLink = data.result.mp4;
+            } 
+            // 2. Jika Link TIKTOK
+            else if (urlStr.includes('tiktok.com')) {
+                apiUrl = `https://api.tiklydown.eu.org/api/download?url=${encodeURIComponent(urlStr)}`;
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                if (data.video && data.video.noWatermark) finalDownloadLink = data.video.noWatermark;
+            } 
+            // 3. Jika Link INSTAGRAM
+            else if (urlStr.includes('instagram.com')) {
+                apiUrl = `https://widipe.com/download/igdl?url=${encodeURIComponent(urlStr)}`;
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                // Mengambil video pertama dari kumpulan slide/reels IG
+                if (data.result && data.result.length > 0) finalDownloadLink = data.result[0].url;
+                else if (data.result && data.result.url) finalDownloadLink = data.result.url;
+            } 
+            // 4. Jika Link FACEBOOK
+            else if (urlStr.includes('facebook.com') || urlStr.includes('fb.watch')) {
+                apiUrl = `https://widipe.com/download/fbdl?url=${encodeURIComponent(urlStr)}`;
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                if (data.result && data.result.Normal_video) finalDownloadLink = data.result.Normal_video;
+                else if (data.result && data.result.HD) finalDownloadLink = data.result.HD;
+            } 
+            // Jika tidak dikenali
+            else {
+                throw new Error('Link tidak didukung. Harap masukkan link YT, TikTok, IG, atau FB yang valid.');
             }
 
-            progressBar.style.width = '100%';
+            progressBar.style.width = '80%';
 
+            // Tampilkan hasil jika sukses menangkap link
             if (finalDownloadLink) {
                 setTimeout(() => {
+                    progressBar.style.width = '100%';
                     progressContainer.classList.add('hidden');
                     resultArea.classList.remove('hidden');
                     resultLink.value = finalDownloadLink;
                 }, 500);
             } else {
-                const errMsg = data.message || data.mess || 'Gagal menemukan link download dari API.';
-                throw new Error(errMsg);
+                throw new Error('Server API sedang sibuk atau video ini diprivate oleh pembuat aslinya.');
             }
 
         } catch (error) {
@@ -69,11 +84,13 @@ document.addEventListener('DOMContentLoaded', () => {
             progressContainer.classList.add('hidden');
             alert(`API Error: ${error.message}`);
         } finally {
+            // Kembalikan tombol seperti semula
             btnProcess.disabled = false;
             btnProcess.textContent = 'PROCESS';
         }
     });
 
+    // Fitur Copy Link
     if (copyBtn) {
         copyBtn.addEventListener('click', () => {
             resultLink.select();
