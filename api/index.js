@@ -7,7 +7,7 @@ const redis = new Redis({
   token: "AfzOAAIncDJhYWM2YWUwY2IxMmU0YTQyYjc0NGIwZTBkMzUxMGFhMHAyNjQ3MTg",
 });
 
-// 2. Aturan: Maksimal 10 request per jam per IP address
+// 2. Aturan: Maksimal 10 request per jam per IP
 const ratelimit = new Ratelimit({
   redis: redis,
   limiter: Ratelimit.slidingWindow(10, "1 h"),
@@ -24,7 +24,7 @@ export default async function handler(req, res) {
         return res.status(200).end();
     }
 
-    // 4. Proteksi Rate Limit Anti-Bot
+    // 4. Proteksi Rate Limit
     const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress || "127.0.0.1";
     const { success, limit, remaining, reset } = await ratelimit.limit(ip);
 
@@ -32,56 +32,64 @@ export default async function handler(req, res) {
     res.setHeader('X-RateLimit-Remaining', remaining);
 
     if (!success) {
-        return res.status(429).json({ 
-            success: false,
-            error: "Limit tercapai (Max 10/jam). Silakan coba lagi nanti."
-        });
+        return res.status(429).json({ success: false, error: "Limit penggunaan harian tercapai. Silakan coba lagi nanti." });
     }
 
-    // 5. Logika Routing Utama
+    // 5. Logika Routing
     if (req.method === 'POST') {
         const { action, videoUrl } = req.body;
 
-        // --- FITUR VIDEO DOWNLOADER ---
         if (action === 'download' && videoUrl) {
-            try {
-                // MENGGUNAKAN API COBALT V7 TERBARU (Tanpa /api/json)
-                const apiResponse = await fetch("https://api.cobalt.tools/", {
-                    method: "POST",
-                    headers: {
-                        "Accept": "application/json",
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        url: videoUrl
-                    })
-                });
+            
+            // 🔥 DAFTAR SERVER PRIVATE (SMART SWITCHER) 🔥
+            // Kode akan otomatis mencoba dari atas ke bawah sampai berhasil!
+            const SERVERS = [
+                "https://cobalt.ziy.sh/",
+                "https://cobalt.q0.o.q0.pm/",
+                "https://cobalt.acyl.ing/",
+                "https://api.cobalt.tools/" // Server utama taruh paling bawah sebagai cadangan terakhir
+            ];
 
-                const apiData = await apiResponse.json();
+            let finalDownloadLink = null;
 
-                if (apiData.url) {
-                    // Berhasil!
-                    return res.status(200).json({ 
-                        success: true, 
-                        downloadLink: apiData.url 
+            // Memburu link dari server-server di atas
+            for (let server of SERVERS) {
+                try {
+                    const apiResponse = await fetch(server, {
+                        method: "POST",
+                        headers: {
+                            "Accept": "application/json",
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ url: videoUrl })
                     });
-                } else {
-                    // Jika gagal, tangkap dan kirim ALASAN ASLI dari Cobalt ke layarmu!
-                    const errorMessage = apiData.text || apiData.error || 'Ditolak oleh Server Cobalt.';
-                    return res.status(400).json({ 
-                        success: false, 
-                        error: `COBALT ERROR: ${errorMessage}` 
-                    });
+
+                    const apiData = await apiResponse.json();
+
+                    if (apiData.url) {
+                        finalDownloadLink = apiData.url;
+                        break; // BERHASIL! Dapatkan link dan langsung keluar dari pencarian
+                    }
+                } catch (e) {
+                    // Kalau server ini gagal/diblokir, diam saja dan lompat ke server berikutnya
+                    continue; 
                 }
-            } catch (error) {
-                console.error("Downloader API Error:", error);
-                return res.status(500).json({ 
+            }
+
+            // Hasil Akhir
+            if (finalDownloadLink) {
+                return res.status(200).json({ 
+                    success: true, 
+                    downloadLink: finalDownloadLink 
+                });
+            } else {
+                return res.status(400).json({ 
                     success: false, 
-                    error: 'Gagal menghubungi server penyedia video.' 
+                    error: "Semua server penyedia sedang sibuk atau link tidak valid/diproteksi." 
                 });
             }
         }
     }
 
     return res.status(404).json({ success: false, error: 'Endpoint tidak valid.' });
-                          }
+          }
