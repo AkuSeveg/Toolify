@@ -17,7 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Tampilan saat loading
         btnProcess.disabled = true;
         btnProcess.textContent = 'EXTRACTING...';
         progressContainer.classList.remove('hidden');
@@ -25,32 +24,35 @@ document.addEventListener('DOMContentLoaded', () => {
         progressBar.style.width = '30%';
 
         try {
-            // 🔥 JALUR BYPASS: Tembak API All-in-One Danxy langsung dari HP! 🔥
-            // Format URL: https://danxyofficial-api.vercel.app/api/download/aiodl?url=...
-            const apiUrl = `https://danxyofficial-api.vercel.app/api/download/aiodl?url=${encodeURIComponent(urlStr)}`;
+            // 🔥 ALAMAT SUDAH DIPERBAIKI: Menghapus "/api" yang nyasar 🔥
+            const apiUrl = `https://danxyofficial-api.vercel.app/download/aiodl?url=${encodeURIComponent(urlStr)}`;
             
             const response = await fetch(apiUrl);
-            const data = await response.json();
             
+            // Cek jika server mengembalikan halaman HTML/Error bukan JSON
+            const contentType = response.headers.get("content-type");
+            if (contentType && contentType.indexOf("application/json") === -1) {
+                throw new Error("Server API tidak merespons dengan format JSON. (Mungkin sedang offline/maintenance)");
+            }
+
+            const data = await response.json();
             progressBar.style.width = '70%';
 
             let finalDownloadLink = null;
 
-            // 🤖 DETEKSI CERDAS: Karena kita belum tahu pasti bentuk JSON AIO-nya,
-            // kode ini akan mencari letak link videonya secara otomatis!
+            // Deteksi format balasan
             if (data.result && data.result.url) {
-                finalDownloadLink = data.result.url; // Format standar
+                finalDownloadLink = data.result.url;
             } else if (data.url) {
-                finalDownloadLink = data.url; // Format ringkas
+                finalDownloadLink = data.url;
             } else if (data.result && data.result.video) {
-                finalDownloadLink = data.result.video; // Format Tiktok
+                finalDownloadLink = data.result.video;
             } else if (data.data && data.data.url) {
-                finalDownloadLink = data.data.url; // Format alternatif
+                finalDownloadLink = data.data.url;
             }
 
             progressBar.style.width = '100%';
 
-            // Tampilkan hasil jika sukses
             if (finalDownloadLink) {
                 setTimeout(() => {
                     progressContainer.classList.add('hidden');
@@ -58,23 +60,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     resultLink.value = finalDownloadLink;
                 }, 500);
             } else {
-                // Kalau gagal, tangkap pesan error aslinya dari Danxy
-                const errMsg = data.message || data.mess || 'Gagal diekstrak oleh API Danxy.';
+                const errMsg = data.message || data.mess || 'Gagal menemukan link download dari API.';
                 throw new Error(errMsg);
             }
 
         } catch (error) {
             progressBar.style.width = '0%';
             progressContainer.classList.add('hidden');
-            alert(`API Error: ${error.message}\n(Mungkin API sedang gangguan atau link diproteksi)`);
+            alert(`API Error: ${error.message}`);
         } finally {
-            // Kembalikan tombol seperti semula
             btnProcess.disabled = false;
             btnProcess.textContent = 'PROCESS';
         }
     });
 
-    // Fitur Copy Link
     if (copyBtn) {
         copyBtn.addEventListener('click', () => {
             resultLink.select();
