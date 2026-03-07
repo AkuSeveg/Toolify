@@ -2,10 +2,10 @@ import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 
 // 1. Inisialisasi koneksi Redis untuk Rate Limiting
-// URL dan Token ini akan otomatis diambil dari Environment Variables Vercel
+// Ganti bagian ini dengan tanda kutip, buang process.env-nya
 const redis = new Redis({
-  url: process.env.https://fine-shepherd-64718.upstash.io,
-  token: process.env.AfzOAAIncDJhYWM2YWUwY2IxMmU0YTQyYjc0NGIwZTBkMzUxMGFhMHAyNjQ3MTg,
+  url: "https://fine-shepherd-64718.upstash.io",
+  token: "AfzOAAIncDJhYWM2YWUwY2IxMmU0YTQyYjc0NGIwZTBkMzUxMGFhMHAyNjQ3MTg",
 });
 
 // 2. Aturan: Maksimal 10 request per jam per IP address
