@@ -2,7 +2,6 @@ import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 
 // 1. Inisialisasi koneksi Redis untuk Rate Limiting
-// URL dan Token menggunakan string langsung (tanda kutip) agar Vercel bisa membacanya
 const redis = new Redis({
   url: "https://fine-shepherd-64718.upstash.io",
   token: "AfzOAAIncDJhYWM2YWUwY2IxMmU0YTQyYjc0NGIwZTBkMzUxMGFhMHAyNjQ3MTg",
@@ -15,13 +14,12 @@ const ratelimit = new Ratelimit({
 });
 
 export default async function handler(req, res) {
-    // 3. Konfigurasi CORS (Agar frontend kamu diizinkan mengakses API ini)
+    // 3. Konfigurasi CORS
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
     res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
 
-    // Tangani preflight request dari browser
     if (req.method === 'OPTIONS') {
         return res.status(200).end();
     }
@@ -30,7 +28,6 @@ export default async function handler(req, res) {
     const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress || "127.0.0.1";
     const { success, limit, remaining, reset } = await ratelimit.limit(ip);
 
-    // Kirim info sisa limit ke header (standar API profesional)
     res.setHeader('X-RateLimit-Limit', limit);
     res.setHeader('X-RateLimit-Remaining', remaining);
 
@@ -48,35 +45,32 @@ export default async function handler(req, res) {
         // --- FITUR VIDEO DOWNLOADER ---
         if (action === 'download' && videoUrl) {
             try {
-                // Menggunakan public API resmi dari Cobalt yang baru beserta Headers penyamaran
-                const apiResponse = await fetch("https://api.cobalt.tools/api/json", {
+                // MENGGUNAKAN API COBALT V7 TERBARU (Tanpa /api/json)
+                const apiResponse = await fetch("https://api.cobalt.tools/", {
                     method: "POST",
                     headers: {
                         "Accept": "application/json",
-                        "Content-Type": "application/json",
-                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-                        "Origin": "https://cobalt.tools"
+                        "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        url: videoUrl,
-                        vQuality: "720",
-                        isAudioOnly: false 
+                        url: videoUrl
                     })
                 });
 
                 const apiData = await apiResponse.json();
 
                 if (apiData.url) {
-                    // Berhasil mendapatkan link download langsung
+                    // Berhasil!
                     return res.status(200).json({ 
                         success: true, 
                         downloadLink: apiData.url 
                     });
                 } else {
-                    // Gagal (misal videonya di-private oleh pembuat aslinya)
+                    // Jika gagal, tangkap dan kirim ALASAN ASLI dari Cobalt ke layarmu!
+                    const errorMessage = apiData.text || apiData.error || 'Ditolak oleh Server Cobalt.';
                     return res.status(400).json({ 
                         success: false, 
-                        error: 'Video diproteksi, dihapus, atau link tidak didukung.' 
+                        error: `COBALT ERROR: ${errorMessage}` 
                     });
                 }
             } catch (error) {
@@ -89,6 +83,5 @@ export default async function handler(req, res) {
         }
     }
 
-    // Jika pengguna mencoba mengakses rute yang tidak kita buat
     return res.status(404).json({ success: false, error: 'Endpoint tidak valid.' });
-}
+                          }
