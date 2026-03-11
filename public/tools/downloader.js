@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Menangkap semua elemen dari HTML
+    // 1. Tangkap semua elemen dari index.html
     const btnProcess = document.getElementById('action-btn');
     const urlInput = document.getElementById('url-input');
     const progressContainer = document.getElementById('progress-container');
@@ -8,76 +8,61 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultLink = document.getElementById('result-link');
     const copyBtn = document.getElementById('copy-btn');
 
-    // Mencegah error jika tombol tidak ditemukan di halaman
-    if (!btnProcess) return;
+    // Jaga-jaga kalau elemennya belum ke-load
+    if (!btnProcess || !urlInput) return;
 
-    // 2. Event ketika tombol Process diklik
+    // 2. Aksi saat tombol Process diklik
     btnProcess.addEventListener('click', async () => {
         const urlStr = urlInput.value.trim();
         
-        // Peringatan jika link kosong
         if (!urlStr) {
-            alert('Harap masukkan link video YouTube!');
+            alert('Bos, link videonya diisi dulu dong!');
             return;
         }
 
-        // Ubah tampilan menjadi mode Loading
+        // Ubah tampilan ke mode loading
         btnProcess.disabled = true;
-        btnProcess.textContent = 'EXTRACTING...';
+        btnProcess.textContent = 'MENGGALI DATA (AIO)...';
         progressContainer.classList.remove('hidden');
         resultArea.classList.add('hidden');
         progressBar.style.width = '30%';
 
         try {
-            // 🔥 MESIN PEMOTONG KTP YOUTUBE 🔥
-            // Mengambil 11 digit ID video dari link yang panjang
-            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-            const match = urlStr.match(regExp);
-            const videoId = (match && match[2].length === 11) ? match[2] : null;
-
-            if (!videoId) {
-                throw new Error("Link YouTube tidak valid. Harap masukkan link yang benar.");
-            }
-
-            progressBar.style.width = '50%';
-
-            // 🔥 KUNCI RAPIDAPI MILIKMU (FULL & ASLI) 🔥
-            const RAPIDAPI_KEY = "72c9e6943emshb88e6069d09605fp1945b0jsn784f000ba98e";
-            const RAPIDAPI_HOST = "youtube-video-fast-downloader-24-7.p.rapidapi.com"; 
-
-            // Tembak server RapidAPI VIP dengan ID Video milikmu
-            const apiUrl = `https://${RAPIDAPI_HOST}/get-videos-info/${videoId}?response_mode=default`;
-
-            const response = await fetch(apiUrl, {
-                method: 'GET',
-                headers: {
-                    'x-rapidapi-key': RAPIDAPI_KEY,
-                    'x-rapidapi-host': RAPIDAPI_HOST
-                }
-            });
-
-            // Cek jika server RapidAPI menolak atau error
+            // 🔥 Nembak API AIO buatan Bos Yoanz di Vercel 🔥
+            // Kita pakai endpoint /api/aio yang udah disetting tadi
+            const apiUrl = `/api/aio?url=${encodeURIComponent(urlStr)}`;
+            
+            const response = await fetch(apiUrl);
+            
+            // Cek kalau Vercel-nya ngasih error 500 dll
             if (!response.ok) {
-                throw new Error(`Gagal terhubung ke API (Status: ${response.status})`);
+                throw new Error(`Server Error: ${response.status}. Pastikan api/index.js sudah benar di Vercel.`);
             }
 
             const data = await response.json();
-            progressBar.style.width = '80%';
+            progressBar.style.width = '70%';
 
-            // 🤖 JURUS PENCARI LINK MP4 OTOMATIS 🤖
+            // Cek status dari JSON balasan AIO-mu
+            if (data.status === false || data.error) {
+                throw new Error(data.error || "Gagal nge-scrape data dari server.");
+            }
+
+            // 🤖 MESIN PENCARI LINK DOWNLOAD 🤖
             let finalDownloadLink = null;
-            
-            // Kita bongkar paksa isi JSON-nya dan cari link yang asalnya dari server YouTube
-            JSON.stringify(data, (key, value) => {
-                if (typeof value === 'string' && (value.includes('googlevideo.com/videoplayback') || value.includes('.mp4'))) {
-                    if (!finalDownloadLink) finalDownloadLink = value; // Ambil link pertama yang ketemu
-                }
-                return value;
-            });
+            const links = data.result.downloadUrls;
+
+            // Karena hasil scraping AIO itu bisa array atau object, kita deteksi:
+            if (links && Array.isArray(links) && links.length > 0) {
+                // Ambil link download urutan pertama (biasanya HD / No Watermark)
+                finalDownloadLink = links[0].url || links[0]; 
+            } else if (links && typeof links === 'object') {
+                const firstKey = Object.keys(links)[0];
+                finalDownloadLink = links[firstKey].url || links[firstKey];
+            }
 
             progressBar.style.width = '100%';
 
-            // Tampilkan hasil akhirnya ke layar
+            // Tampilkan hasilnya!
             if (finalDownloadLink) {
                 setTimeout(() => {
                     progressContainer.classList.add('hidden');
@@ -85,28 +70,27 @@ document.addEventListener('DOMContentLoaded', () => {
                     resultLink.value = finalDownloadLink;
                 }, 500);
             } else {
-                console.log("Data mentah dari API:", data);
-                throw new Error('Video berhasil ditemukan di server, tapi link download MP4-nya diproteksi.');
+                console.log("Data AIO Mentah:", data);
+                throw new Error('Video ketemu, tapi link MP4-nya gagal diekstrak sama mesin AIO.');
             }
 
         } catch (error) {
-            // Jika terjadi error, kembalikan tampilan dan beri alert
             progressBar.style.width = '0%';
             progressContainer.classList.add('hidden');
-            alert(`API Error: ${error.message}`);
+            alert(`Waduh Error: ${error.message}`);
         } finally {
-            // Normalkan kembali tombol Process
+            // Kembalikan tombol ke kondisi semula
             btnProcess.disabled = false;
             btnProcess.textContent = 'PROCESS';
         }
     });
 
-    // 3. Fitur Tombol Copy Link
+    // 3. Aksi saat tombol Copy diklik
     if (copyBtn) {
         copyBtn.addEventListener('click', () => {
             resultLink.select();
             document.execCommand('copy');
-            alert('Link MP4 berhasil disalin ke clipboard! Buka tab browser baru lalu Paste linknya untuk mendownload.');
+            alert('Sip! Link MP4 berhasil disalin. Buka tab baru di browser lu terus paste linknya buat download!');
         });
     }
 });
