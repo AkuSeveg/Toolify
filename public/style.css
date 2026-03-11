@@ -1,16 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
 
 :root {
-    /* 🎨 PALET WARNA NEUMORPHISM: Hitam Kebiruan Premium */
-    --bg-main: #1a1e29; 
-    --shadow-dark: #12151d;
-    --shadow-light: #222735;
+    /* 🎨 WARNA STEALTH DARK MODE (Sangar & Premium) */
+    --bg-main: #0f172a; /* Biru malam pekat */
+    --shadow-dark: #070a13; /* Bayangan gelap tajam */
+    --shadow-light: #172441; /* Cahaya tipis */
     
-    --text-main: #e2e8f0;
-    --text-muted: #8b949e;
-    --accent: #3b82f6; /* Aksen biru neon */
+    --text-main: #f8fafc;
+    --text-muted: #64748b;
+    --accent: #38bdf8; /* Biru neon terang */
+    --accent-hover: #0284c7;
     
-    --radius-lg: 24px;
+    --radius-lg: 20px;
     --radius-md: 12px;
 }
 
@@ -32,27 +33,40 @@ body {
 }
 
 /* =========================================
-   🔥 KELAS INTI NEUMORPHISM 
+   🔥 SIHIR NEUMORPHISM STEALTH (Lebih Tajam)
    ========================================= */
 
-/* Efek Timbul (Raised) untuk Kartu & Tombol */
 .neu-card, .neu-btn {
     background: var(--bg-main);
-    box-shadow: 8px 8px 16px var(--shadow-dark), 
-               -8px -8px 16px var(--shadow-light);
-    border: none;
+    box-shadow: 6px 6px 14px var(--shadow-dark), 
+               -6px -6px 14px var(--shadow-light);
+    border: 1px solid rgba(255, 255, 255, 0.02);
     border-radius: var(--radius-lg);
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Efek Tenggelam (Pressed) untuk Input & Area Upload */
+.neu-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 8px 8px 20px var(--shadow-dark), 
+               -8px -8px 20px var(--shadow-light);
+    border-color: rgba(56, 189, 248, 0.2);
+}
+
+.neu-card:hover .icon-wrapper {
+    color: var(--accent);
+    box-shadow: inset 4px 4px 8px var(--shadow-dark), 
+                inset -4px -4px 8px var(--shadow-light),
+                0 0 15px rgba(56, 189, 248, 0.3);
+}
+
 .neu-input, .neu-pressed, .neu-pressed-circle {
     background: var(--bg-main);
-    box-shadow: inset 6px 6px 12px var(--shadow-dark), 
-                inset -6px -6px 12px var(--shadow-light);
-    border: none;
+    box-shadow: inset 5px 5px 10px var(--shadow-dark), 
+                inset -5px -5px 10px var(--shadow-light);
+    border: 1px solid rgba(0,0,0,0.2);
     border-radius: var(--radius-md);
     color: var(--text-main);
+    transition: 0.3s;
 }
 
 .neu-pressed-circle {
@@ -63,14 +77,13 @@ body {
 }
 
 /* =========================================
-   STRUKTUR HALAMAN & LAYOUT 
+   LAYOUT & KOMPONEN
    ========================================= */
 
-/* --- NAVBAR --- */
 .navbar {
     width: 100%;
     max-width: 1200px;
-    padding: 30px 40px;
+    padding: 25px 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -78,7 +91,7 @@ body {
 
 .logo {
     font-weight: 800;
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     color: var(--text-main);
     text-decoration: none;
     letter-spacing: 2px;
@@ -93,7 +106,7 @@ body {
 .nav-links {
     list-style: none;
     display: flex;
-    gap: 20px;
+    gap: 25px;
 }
 
 .nav-links a {
@@ -108,19 +121,23 @@ body {
 }
 
 .neu-btn-icon {
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
     background: var(--bg-main);
-    box-shadow: 6px 6px 12px var(--shadow-dark), 
-               -6px -6px 12px var(--shadow-light);
+    box-shadow: 4px 4px 10px var(--shadow-dark), 
+               -4px -4px 10px var(--shadow-light);
     border: none;
-    color: var(--text-main);
+    color: var(--text-muted);
     cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: all 0.2s ease;
+    transition: all 0.2s;
+}
+
+.neu-btn-icon:hover {
+    color: var(--accent);
 }
 
 .neu-btn-icon:active, .neu-btn:active {
@@ -133,13 +150,13 @@ body {
 main {
     width: 100%;
     max-width: 1100px;
-    padding: 40px 20px;
+    padding: 30px 20px 60px;
     flex-grow: 1;
 }
 
 .hero {
     text-align: center;
-    margin-bottom: 70px;
+    margin-bottom: 60px;
 }
 
 .hero h1 {
@@ -147,6 +164,7 @@ main {
     font-weight: 800;
     margin-bottom: 15px;
     color: var(--text-main);
+    text-shadow: 0 4px 10px rgba(0,0,0,0.5);
 }
 
 .hero p {
@@ -154,15 +172,15 @@ main {
     font-size: 1.2rem;
 }
 
-/* --- GRID KOTAK TOOLS --- */
+/* --- GRID TOOLS --- */
 .tools-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 40px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 35px;
 }
 
 .tool-card {
-    padding: 40px 30px;
+    padding: 35px 25px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -170,103 +188,116 @@ main {
     cursor: pointer;
 }
 
-.tool-card:hover {
-    transform: translateY(-8px);
-}
-
-.tool-card:hover .icon-wrapper {
-    color: var(--accent);
-}
-
 .tool-card .icon-wrapper {
-    width: 80px;
-    height: 80px;
+    width: 75px;
+    height: 75px;
     margin-bottom: 25px;
     color: var(--text-muted);
-    transition: color 0.3s;
+    transition: all 0.3s ease;
 }
 
 .tool-card h3 {
-    margin-bottom: 15px;
-    font-size: 1.3rem;
+    margin-bottom: 12px;
+    font-size: 1.25rem;
 }
 
 .tool-card p {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     color: var(--text-muted);
-    line-height: 1.5;
+    line-height: 1.6;
 }
 
-/* --- ANTARMUKA TOOL (SAAT DIKLIK) --- */
-.hidden {
-    display: none !important;
-}
+/* --- INTERFACE TOOL --- */
+.hidden { display: none !important; }
 
 #tool-interface {
     max-width: 650px;
     margin: 0 auto;
-    padding: 50px;
+    padding: 40px;
 }
 
 .tool-header {
     display: flex;
     align-items: center;
-    gap: 25px;
-    margin-bottom: 40px;
+    gap: 20px;
+    margin-bottom: 35px;
 }
 
 .input-area label, .result-area label, .format-selection label {
     display: block;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
     font-weight: 600;
     color: var(--text-muted);
     padding-left: 5px;
+    font-size: 0.95rem;
 }
 
 .neu-input {
     width: 100%;
-    padding: 18px 25px;
-    font-size: 1.05rem;
+    padding: 16px 20px;
+    font-size: 1rem;
     outline: none;
 }
 
+.neu-input:focus {
+    box-shadow: inset 5px 5px 10px var(--shadow-dark), 
+                inset -5px -5px 10px var(--shadow-light),
+                0 0 0 1px var(--accent);
+}
+
 .upload-area {
-    padding: 50px 20px;
+    padding: 45px 20px;
     text-align: center;
-    margin: 30px 0;
+    margin: 25px 0;
     cursor: pointer;
+    border: 1px dashed rgba(255,255,255,0.05);
 }
 
 .upload-area .icon-wrapper {
+    color: var(--text-muted);
+    margin-bottom: 15px;
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 15px;
+}
+
+.upload-area:hover .icon-wrapper {
     color: var(--accent);
-    margin-bottom: 20px;
 }
 
 .monochrome-select {
     width: 100%;
-    padding: 18px 25px;
+    padding: 16px 20px;
     appearance: none;
     cursor: pointer;
 }
 
 .btn-primary {
     width: 100%;
-    padding: 20px;
+    padding: 18px;
     margin-top: 30px;
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     font-weight: 800;
-    color: var(--text-main);
+    color: var(--accent);
     cursor: pointer;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
 }
 
-/* --- PROGRESS BAR --- */
+.btn-primary:hover {
+    color: #fff;
+    box-shadow: 4px 4px 10px var(--shadow-dark), 
+               -4px -4px 10px var(--shadow-light),
+               0 0 15px rgba(56, 189, 248, 0.4);
+}
+
+/* PROGRESS BAR */
 .progress-container {
     width: 100%;
-    height: 15px;
+    height: 12px;
     border-radius: 10px;
-    margin-top: 30px;
-    padding: 3px;
+    margin-top: 25px;
+    padding: 2px;
 }
 
 .progress-bar {
@@ -275,110 +306,96 @@ main {
     background: var(--accent);
     border-radius: 8px;
     transition: width 0.4s ease;
-    box-shadow: 2px 2px 5px var(--shadow-dark), 
-               -2px -2px 5px var(--shadow-light); 
+    box-shadow: 0 0 10px var(--accent);
 }
 
-/* --- AREA HASIL --- */
+/* AREA HASIL */
 .result-box {
     display: flex;
-    gap: 20px;
-    margin-top: 10px;
+    gap: 15px;
+    margin-top: 5px;
 }
 
 /* --- ABOUT SECTION --- */
 .about-section {
     display: flex;
     flex-direction: column;
-    gap: 40px;
-    margin-top: 80px;
+    gap: 30px;
+    margin-top: 60px;
 }
 
-.banner-card {
-    padding: 20px;
-}
+.banner-card { padding: 15px; }
 
 .banner-img {
     width: 100%;
     border-radius: var(--radius-md);
     object-fit: cover;
+    opacity: 0.9;
 }
 
 .profile-card {
-    padding: 40px;
+    padding: 35px;
     display: flex;
     align-items: center;
-    gap: 40px;
+    gap: 35px;
 }
 
 .profile-img {
-    width: 140px;
-    height: 140px;
+    width: 120px;
+    height: 120px;
     object-fit: cover;
-    padding: 8px;
+    padding: 6px; 
 }
 
 .tech-vertical-list {
     display: flex;
-    gap: 20px;
-    margin-top: 25px;
+    gap: 15px;
+    margin-top: 20px;
     flex-wrap: wrap;
 }
 
 .tech-item {
-    padding: 15px 25px;
+    padding: 12px 20px;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     font-weight: 600;
+    font-size: 0.9rem;
 }
 
 .tech-item img {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
 }
 
 footer {
     text-align: center;
-    padding: 40px;
+    padding: 30px;
     color: var(--text-muted);
     width: 100%;
-    margin-top: 50px;
 }
 
 /* =========================================
-   📱 PENJINAK LAYAR HP (RESPONSIVE FIX) 📱
+   📱 RESPONSIVE HP (ANTI KEGENCET) 📱
    ========================================= */
 @media (max-width: 768px) {
-    /* Perbaikan teks kegencet di About Section */
+    .navbar { padding: 20px; }
+    .hero h1 { font-size: 2.5rem; }
+    
     .profile-card {
-        flex-direction: column; /* Memaksa foto di atas, teks di bawah */
-        text-align: center; /* Rata tengah biar estetik */
-        padding: 30px 20px; /* Kurangi jarak biar muat di HP */
-    }
-
-    .profile-img {
-        width: 120px; /* Sedikit dikecilkan untuk HP */
-        height: 120px;
-        margin-bottom: 10px;
-    }
-
-    .about-info h2 {
-        margin-bottom: 15px; 
-    }
-
-    /* Perbaikan Hero Text kebesaran di HP */
-    .hero h1 {
-        font-size: 2.2rem;
-    }
-
-    /* Perbaikan Tool Interface yang terlalu lebar di HP */
-    #tool-interface {
+        flex-direction: column;
+        text-align: center;
         padding: 30px 20px;
     }
 
-    /* Menata Navbar di HP */
-    .navbar {
-        padding: 20px;
+    .profile-img {
+        width: 100px; 
+        height: 100px;
+        margin-bottom: 10px;
     }
+
+    .about-info h2 { margin-bottom: 10px; }
+    #tool-interface { padding: 25px 15px; }
+    .result-box { flex-direction: column; }
+    .btn-copy { width: 100%; padding: 15px; }
     }
