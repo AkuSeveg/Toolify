@@ -1,126 +1,80 @@
-const themeToggle = document.getElementById('theme-toggle');
-const htmlElement = document.documentElement;
+// ==========================================
+// SUTRADARA UI TOOLIFY - Coded by Yoanz
+// ==========================================
 
-themeToggle.addEventListener('click', () => {
-    const currentTheme = htmlElement.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    htmlElement.setAttribute('data-theme', newTheme);
+// Fungsi untuk membuka Tool yang dipilih
+function openTool(toolId) {
+    // 1. Sembunyikan Grid Menu & About
+    document.getElementById('tools').classList.add('hidden');
+    document.getElementById('about').classList.add('hidden');
     
-    // Ganti ikon bulan menjadi matahari dan sebaliknya
-    const icon = newTheme === 'dark' ? 'moon' : 'sun';
-    themeToggle.innerHTML = `<i data-feather="${icon}"></i>`;
-    feather.replace(); // Render ulang ikon dari Feather
-});
+    // 2. Tampilkan Layar Interface Tool
+    document.getElementById('tool-interface').classList.remove('hidden');
 
-// -- 2. UI STATE MANAGEMENT (Manajemen Tampilan) --
-let currentActiveTool = '';
+    // Tangkap semua elemen area
+    const linkArea = document.getElementById('link-input-area');
+    const dropZone = document.getElementById('drop-zone');
+    const formatArea = document.getElementById('format-selection-area');
+    const btnProcess = document.getElementById('action-btn');
+    const resultArea = document.getElementById('result-area');
+    const progressContainer = document.getElementById('progress-container');
 
-// Kumpulkan semua elemen HTML yang sering dipakai agar kode lebih rapi
-const uiElements = {
-    toolsGrid: document.getElementById('tools'),
-    toolInterface: document.getElementById('tool-interface'),
-    toolTitle: document.getElementById('tool-title'),
-    dropZone: document.getElementById('drop-zone'),
-    dropText: document.getElementById('drop-text'),
-    linkInputArea: document.getElementById('link-input-area'),
-    urlInput: document.getElementById('url-input'),
-    formatSelectionArea: document.getElementById('format-selection-area'),
-    targetFormat: document.getElementById('target-format'),
-    progressContainer: document.getElementById('progress-container'),
-    progressBar: document.getElementById('progress-bar'),
-    resultArea: document.getElementById('result-area'),
-    resultLink: document.getElementById('result-link'),
-    fileInput: document.getElementById('file-input'),
-    actionBtn: document.getElementById('action-btn')
-};
+    // 3. Reset (Sembunyikan semua area dulu)
+    linkArea.classList.add('hidden');
+    dropZone.classList.add('hidden');
+    formatArea.classList.add('hidden');
+    resultArea.classList.add('hidden');
+    progressContainer.classList.add('hidden');
 
-// Fungsi membuka Tool
-function openTool(toolType) {
-    currentActiveTool = toolType;
-    uiElements.toolsGrid.classList.add('hidden');
-    uiElements.toolInterface.classList.remove('hidden');
-    
-    // Reset kondisi UI setiap kali membuka tool baru
-    resetUI();
-    uiElements.dropZone.classList.add('hidden');
-    uiElements.linkInputArea.classList.add('hidden');
-    uiElements.formatSelectionArea.classList.add('hidden');
-
-    // Tampilkan elemen input sesuai Tool yang dipilih
-    if (toolType === 'downloader') {
-        uiElements.toolTitle.innerText = 'Video Downloader';
-        uiElements.linkInputArea.classList.remove('hidden');
-        uiElements.actionBtn.innerText = 'Download';
-    } else {
-        uiElements.dropZone.classList.remove('hidden');
-        
-        if (toolType === 'converter') {
-            uiElements.toolTitle.innerText = 'File Converter';
-            uiElements.formatSelectionArea.classList.remove('hidden'); // Munculkan Dropdown Format
-            uiElements.actionBtn.innerText = 'Convert File';
-        } else if (toolType === 'imageLink') {
-            uiElements.toolTitle.innerText = 'Image to Link';
-            uiElements.actionBtn.innerText = 'Upload Image';
-        } else if (toolType === 'videoLink') {
-            uiElements.toolTitle.innerText = 'Video to Link';
-            uiElements.actionBtn.innerText = 'Upload Video';
-        }
+    // 4. Munculkan area yang sesuai dengan tool yang diklik
+    if (toolId === 'downloader') {
+        // Mode AIO Downloader: Butuh kotak Link
+        linkArea.classList.remove('hidden');
+        btnProcess.textContent = 'DOWNLOAD VIDEO';
+    } 
+    else if (toolId === 'converter') {
+        // Mode Converter: Butuh area Upload & Pilihan Format
+        dropZone.classList.remove('hidden');
+        formatArea.classList.remove('hidden');
+        btnProcess.textContent = 'CONVERT FILE';
+        document.getElementById('tool-title').innerText = 'File Converter';
+    } 
+    else if (toolId === 'imageLink') {
+        // Mode Image to Link: Butuh area Upload saja
+        dropZone.classList.remove('hidden');
+        btnProcess.textContent = 'UPLOAD IMAGE';
+        document.getElementById('tool-title').innerText = 'Image to Link';
+    } 
+    else if (toolId === 'videoLink') {
+        // Mode Video to Link: Butuh area Upload saja
+        dropZone.classList.remove('hidden');
+        btnProcess.textContent = 'UPLOAD VIDEO';
+        document.getElementById('tool-title').innerText = 'Video to Link';
     }
 }
 
-// Fungsi menutup Tool dan kembali ke menu utama
+// Fungsi untuk tombol "Kembali" (Arrow Left)
 function closeTool() {
-    uiElements.toolInterface.classList.add('hidden');
-    uiElements.toolsGrid.classList.remove('hidden');
-    currentActiveTool = '';
+    // 1. Sembunyikan Layar Interface Tool
+    document.getElementById('tool-interface').classList.add('hidden');
+    
+    // 2. Tampilkan kembali Grid Menu & About
+    document.getElementById('tools').classList.remove('hidden');
+    document.getElementById('about').classList.remove('hidden');
+    
+    // 3. Bersihkan sisa-sisa inputan user biar rapi
+    document.getElementById('url-input').value = '';
+    document.getElementById('result-link').value = '';
+    
+    // Reset progress bar kalau masih nyangkut
+    const progressBar = document.getElementById('progress-bar');
+    if(progressBar) progressBar.style.width = '0%';
 }
 
-// Fungsi membersihkan sisa inputan sebelumnya
-function resetUI() {
-    uiElements.progressContainer.classList.add('hidden');
-    uiElements.resultArea.classList.add('hidden');
-    uiElements.progressBar.style.width = '0%';
-    uiElements.urlInput.value = '';
-    uiElements.fileInput.value = '';
-    uiElements.dropText.innerText = 'Drag & Drop file ke sini atau klik';
-    uiElements.actionBtn.disabled = false;
+// Interaksi Tema (Karena kita fokus Neumorphism Dark Mode Premium, tombol bulan kita kasih alert elegan)
+const themeToggle = document.getElementById('theme-toggle');
+if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+        alert('Tampilan Dark Mode Neumorphism adalah tema bawaan (default) Toolify untuk estetika tertinggi! 🕶️✨');
+    });
 }
-
-// -- 3. INTERAKSI INPUT & EKSEKUSI --
-
-// Buka jendela pemilihan file saat area drag & drop diklik
-uiElements.dropZone.addEventListener('click', () => uiElements.fileInput.click());
-
-// Ubah teks saat pengguna selesai memilih file
-uiElements.fileInput.addEventListener('change', (e) => {
-    if(e.target.files.length > 0) {
-        uiElements.dropText.innerText = `Terpilih: ${e.target.files[0].name}`;
-    }
-});
-
-// Tombol Copy Link ke Clipboard
-document.getElementById('copy-btn').addEventListener('click', () => {
-    uiElements.resultLink.select();
-    document.execCommand('copy');
-    alert('Link berhasil disalin ke clipboard!');
-});
-
-// Routing Tombol Action Utama (Jantung Eksekusi)
-uiElements.actionBtn.addEventListener('click', () => {
-    if (currentActiveTool === 'downloader') {
-        const urlValue = uiElements.urlInput.value;
-        // Panggil fungsi dari tools/downloader.js
-        if (typeof handleDownloadRequest === 'function') handleDownloadRequest(urlValue);
-    } 
-    else if (currentActiveTool === 'converter') {
-        const file = uiElements.fileInput.files[0];
-        const format = uiElements.targetFormat.value;
-        // Panggil fungsi dari tools/convert.js
-        if (typeof processConversion === 'function') processConversion(file, format);
-    } 
-    else {
-        const file = uiElements.fileInput.files[0];
-        // Panggil fungsi dari tools/uploaderManager.js
-        if (typeof uploadFileRealtime === 'function') uploadFileRealtime(file);
-    }
-});
