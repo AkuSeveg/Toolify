@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             // 🔥 Nembak API AIO buatan Bos Yoanz di Vercel 🔥
             // Kita pakai endpoint /api/aio yang udah disetting tadi
-            const apiUrl = `/api/aio?url=${encodeURIComponent(urlStr)}`;
+            const apiUrl = `/api?url=${encodeURIComponent(urlStr)}`;
             
             const response = await fetch(apiUrl);
             
