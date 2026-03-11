@@ -32,7 +32,7 @@ body {
 }
 
 /* =========================================
-   🔥 KELAS INTI NEUMORPHISM (SIHIRNYA DI SINI) 
+   🔥 KELAS INTI NEUMORPHISM 
    ========================================= */
 
 /* Efek Timbul (Raised) untuk Kartu & Tombol */
@@ -123,7 +123,6 @@ body {
     transition: all 0.2s ease;
 }
 
-/* Efek tombol diklik jadi tenggelam */
 .neu-btn-icon:active, .neu-btn:active {
     box-shadow: inset 4px 4px 8px var(--shadow-dark), 
                 inset -4px -4px 8px var(--shadow-light);
@@ -267,7 +266,7 @@ main {
     height: 15px;
     border-radius: 10px;
     margin-top: 30px;
-    padding: 3px; /* Jarak agar bar di dalamnya terlihat timbul */
+    padding: 3px;
 }
 
 .progress-bar {
@@ -276,7 +275,6 @@ main {
     background: var(--accent);
     border-radius: 8px;
     transition: width 0.4s ease;
-    /* Memberi bar efek timbul di dalam rel yang tenggelam */
     box-shadow: 2px 2px 5px var(--shadow-dark), 
                -2px -2px 5px var(--shadow-light); 
 }
@@ -317,7 +315,7 @@ main {
     width: 140px;
     height: 140px;
     object-fit: cover;
-    padding: 8px; /* Ruang agar gambar tidak menabrak bingkai tenggelam */
+    padding: 8px;
 }
 
 .tech-vertical-list {
@@ -346,4 +344,41 @@ footer {
     color: var(--text-muted);
     width: 100%;
     margin-top: 50px;
+}
+
+/* =========================================
+   📱 PENJINAK LAYAR HP (RESPONSIVE FIX) 📱
+   ========================================= */
+@media (max-width: 768px) {
+    /* Perbaikan teks kegencet di About Section */
+    .profile-card {
+        flex-direction: column; /* Memaksa foto di atas, teks di bawah */
+        text-align: center; /* Rata tengah biar estetik */
+        padding: 30px 20px; /* Kurangi jarak biar muat di HP */
+    }
+
+    .profile-img {
+        width: 120px; /* Sedikit dikecilkan untuk HP */
+        height: 120px;
+        margin-bottom: 10px;
+    }
+
+    .about-info h2 {
+        margin-bottom: 15px; 
+    }
+
+    /* Perbaikan Hero Text kebesaran di HP */
+    .hero h1 {
+        font-size: 2.2rem;
+    }
+
+    /* Perbaikan Tool Interface yang terlalu lebar di HP */
+    #tool-interface {
+        padding: 30px 20px;
+    }
+
+    /* Menata Navbar di HP */
+    .navbar {
+        padding: 20px;
+    }
     }
