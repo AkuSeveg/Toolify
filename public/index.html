@@ -9,14 +9,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <nav class="navbar">
+    <nav class="navbar neu-nav">
         <a href="#" class="logo">TOOLIFY.</a>
         <div class="nav-right">
             <ul class="nav-links">
                 <li><a href="#" class="active">Home</a></li>
                 <li><a href="#about">About</a></li>
             </ul>
-            <button id="theme-toggle" class="btn-icon"><i data-feather="moon"></i></button>
+            <button id="theme-toggle" class="neu-btn-icon"><i data-feather="moon"></i></button>
         </div>
     </nav>
 
@@ -28,44 +28,26 @@
 
         <section id="tools" class="tools-grid">
             
-            <div class="tool-card" onclick="openTool('downloader'); document.getElementById('tool-title').innerText = 'YouTube DL';">
-                <i data-feather="youtube" class="tool-icon"></i>
-                <h3>YouTube DL</h3>
-                <p>Download video & MP3 dari YouTube.</p>
+            <div class="tool-card neu-card" onclick="openTool('downloader'); document.getElementById('tool-title').innerText = 'AIO Downloader';">
+                <div class="icon-wrapper neu-pressed-circle"><i data-feather="download-cloud" class="tool-icon"></i></div>
+                <h3>AIO Downloader</h3>
+                <p>Download video dari YouTube, TikTok, IG & FB tanpa limit.</p>
             </div>
 
-            <div class="tool-card" onclick="openTool('downloader'); document.getElementById('tool-title').innerText = 'TikTok DL';">
-                <i data-feather="smartphone" class="tool-icon"></i>
-                <h3>TikTok DL</h3>
-                <p>Download video tanpa watermark.</p>
-            </div>
-
-            <div class="tool-card" onclick="openTool('downloader'); document.getElementById('tool-title').innerText = 'Instagram DL';">
-                <i data-feather="instagram" class="tool-icon"></i>
-                <h3>Instagram DL</h3>
-                <p>Download Reels & Postingan IG.</p>
-            </div>
-
-            <div class="tool-card" onclick="openTool('downloader'); document.getElementById('tool-title').innerText = 'Facebook DL';">
-                <i data-feather="facebook" class="tool-icon"></i>
-                <h3>Facebook DL</h3>
-                <p>Download video dari Facebook.</p>
-            </div>
-
-            <div class="tool-card" onclick="openTool('converter')">
-                <i data-feather="refresh-cw" class="tool-icon"></i>
+            <div class="tool-card neu-card" onclick="openTool('converter')">
+                <div class="icon-wrapper neu-pressed-circle"><i data-feather="refresh-cw" class="tool-icon"></i></div>
                 <h3>File Converter</h3>
                 <p>Convert MP4, PNG, JPG, PDF.</p>
             </div>
 
-            <div class="tool-card" onclick="openTool('imageLink')">
-                <i data-feather="image" class="tool-icon"></i>
+            <div class="tool-card neu-card" onclick="openTool('imageLink')">
+                <div class="icon-wrapper neu-pressed-circle"><i data-feather="image" class="tool-icon"></i></div>
                 <h3>Image to Link</h3>
                 <p>Upload image, get a public link.</p>
             </div>
 
-            <div class="tool-card" onclick="openTool('videoLink')">
-                <i data-feather="video" class="tool-icon"></i>
+            <div class="tool-card neu-card" onclick="openTool('videoLink')">
+                <div class="icon-wrapper neu-pressed-circle"><i data-feather="video" class="tool-icon"></i></div>
                 <h3>Video to Link</h3>
                 <p>Upload video, get a public link.</p>
             </div>
@@ -73,17 +55,17 @@
 
         <section id="tool-interface" class="hidden">
             <div class="tool-header">
-                <button class="btn-back" onclick="closeTool()"><i data-feather="arrow-left"></i></button>
+                <button class="neu-btn-icon btn-back" onclick="closeTool()"><i data-feather="arrow-left"></i></button>
                 <h2 id="tool-title" class="tool-heading">Tool Name</h2>
             </div>
             
             <div class="input-area hidden" id="link-input-area">
                 <label>Masukkan Link Video</label>
-                <input type="text" id="url-input" placeholder="Paste link di sini...">
+                <input type="text" id="url-input" class="neu-input" placeholder="Paste link di sini...">
             </div>
 
-            <div class="upload-area" id="drop-zone">
-                <i data-feather="upload"></i>
+            <div class="upload-area neu-pressed" id="drop-zone">
+                <div class="icon-wrapper"><i data-feather="upload"></i></div>
                 <h4 id="drop-text">Drag & Drop file ke sini atau klik</h4>
                 <p>Maksimal 2GB.</p>
                 <input type="file" id="file-input" hidden>
@@ -91,7 +73,7 @@
 
             <div class="format-selection hidden" id="format-selection-area">
                 <label for="target-format">Ubah format menjadi:</label>
-                <select id="target-format" class="monochrome-select">
+                <select id="target-format" class="neu-input monochrome-select">
                     <option value="mp3">MP3 Audio</option>
                     <option value="jpg">JPG Image</option>
                     <option value="png">PNG Image</option>
@@ -100,39 +82,39 @@
                 </select>
             </div>
 
-            <button class="btn-primary" id="action-btn">Process</button>
+            <button class="btn-primary neu-btn" id="action-btn">Process</button>
 
-            <div class="progress-container hidden" id="progress-container">
-                <div class="progress-bar" id="progress-bar"></div>
+            <div class="progress-container hidden neu-pressed" id="progress-container">
+                <div class="progress-bar neu-raised" id="progress-bar"></div>
             </div>
 
             <div class="result-area hidden" id="result-area">
                 <label>Hasil:</label>
-                <div class="result-box">
-                    <input type="text" id="result-link" readonly>
-                    <button class="btn-copy" id="copy-btn"><i data-feather="copy"></i></button>
+                <div class="result-box neu-input-group">
+                    <input type="text" id="result-link" class="neu-input" readonly>
+                    <button class="btn-copy neu-btn-icon" id="copy-btn"><i data-feather="copy"></i></button>
                 </div>
             </div>
         </section>
 
         <section id="about" class="about-section">
-            <div class="vertical-card banner-card">
+            <div class="vertical-card banner-card neu-card">
                 <img src="/assets/banner.jpg" alt="Toolify Banner" class="banner-img">
             </div>
-            <div class="vertical-card profile-card">
-                <img src="/assets/profile.jpg" alt="Profil Yoanz" class="profile-img">
+            <div class="vertical-card profile-card neu-card">
+                <img src="/assets/profile.jpg" alt="Profil Yoanz" class="profile-img neu-pressed-circle">
                 <div class="about-info">
                     <h2>Tentang Toolify</h2>
                     <p>Toolify adalah platform alat digital modern dengan desain minimalis yang dirancang untuk mempercepat alur kerjamu. Cepat, aman, dan responsif.</p>
                 </div>
             </div>
-            <div class="vertical-card tech-card">
+            <div class="vertical-card tech-card neu-card">
                 <h3>Ditenagai Oleh</h3>
                 <div class="tech-vertical-list">
-                    <div class="tech-item"><img src="/assets/html.png" alt="HTML"><span>HTML 5</span></div>
-                    <div class="tech-item"><img src="/assets/css.png" alt="CSS"><span>CSS 3</span></div>
-                    <div class="tech-item"><img src="/assets/js.png" alt="JavaScript"><span>JavaScript</span></div>
-                    <div class="tech-item"><img src="/assets/node.png" alt="Node.js"><span>Node.js Backend</span></div>
+                    <div class="tech-item neu-pressed"><img src="/assets/html.png" alt="HTML"><span>HTML 5</span></div>
+                    <div class="tech-item neu-pressed"><img src="/assets/css.png" alt="CSS"><span>CSS 3</span></div>
+                    <div class="tech-item neu-pressed"><img src="/assets/js.png" alt="JavaScript"><span>JavaScript</span></div>
+                    <div class="tech-item neu-pressed"><img src="/assets/node.png" alt="Node.js"><span>Node.js Backend</span></div>
                 </div>
             </div>
         </section>
@@ -146,6 +128,8 @@
     <script src="/tools/uploaderManager.js"></script>
     <script src="/tools/convert.js"></script>
     <script src="/tools/downloader.js"></script>
-    <script>feather.replace();</script>
+    <script>
+        feather.replace();
+    </script>
 </body>
-                                                                                                  </html>
+                </html>
